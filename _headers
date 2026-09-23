@@ -1,0 +1,7 @@
+# Cloudflare Pages: always serve fresh trip data and pages; versioned assets can cache
+/data/*
+  Cache-Control: no-store
+/*.html
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache

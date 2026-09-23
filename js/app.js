@@ -349,6 +349,9 @@
     if (h.startsWith("trip-") || h === "") { render(); scrollTo({ top: 0, behavior: "smooth" }); }
   });
 
+  // Cloudflare Access puts the site behind a login; this ends that session
+  const signOut = location.hostname.endsWith(".github.io") || location.hostname === "localhost" ? "" : `<p><a href="/cdn-cgi/access/logout">Sign out</a></p>`;
+
   // ---------- Render + tick ----------
   function render() {
     trip = viewedTrip();
@@ -362,9 +365,9 @@
     $("tracker").hidden = !trip;
     if (trip) { buildMap(trip); renderPlan(trip); renderFlights(trip); renderShots(trip); }
     else { $("planSec").hidden = $("flightSec").hidden = $("shotSec").hidden = true; }
-    $("footer").innerHTML = trip && phase !== "past"
+    $("footer").innerHTML = (trip && phase !== "past"
       ? `<b>See you at arrivals</b>${esc(site.home.city)} · ${homeWhen(trip)}`
-      : `<b>Love from ${esc(site.home.city)}</b>`;
+      : `<b>Love from ${esc(site.home.city)}</b>`) + signOut;
     renderDrawer();
     tick(true);
     if (phase === "home") burst(220);
