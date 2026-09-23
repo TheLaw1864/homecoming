@@ -9,20 +9,184 @@
       "leaveHome": null,
       "arriveHome": "2026-09-28T22:30",
       "days": [
-        { "from": "2026-09-28", "to": "2026-09-28", "label": "Flying home", "kind": "flying" }
+        {
+          "from": "2026-09-28",
+          "to": "2026-09-28",
+          "label": "Flying home",
+          "kind": "flying"
+        }
       ],
       "flights": [
         {
-          "number": "MK949", "airline": "Air Mauritius", "operatedBy": "South African Airways",
-          "from": { "code": "MRU", "city": "Mauritius", "name": "Sir Seewoosagur Ramgoolam International Airport", "tz": "Indian/Mauritius", "lat": -20.43, "lon": 57.684 },
-          "to": { "code": "JNB", "city": "Johannesburg", "name": "O. R. Tambo International Airport", "tz": "Africa/Johannesburg", "lat": -26.133, "lon": 28.25 },
-          "dep": "2026-09-28T16:40", "arr": "2026-09-28T19:00"
+          "number": "MK949",
+          "airline": "Air Mauritius",
+          "operatedBy": "South African Airways",
+          "from": {
+            "code": "MRU",
+            "city": "Mauritius",
+            "name": "Sir Seewoosagur Ramgoolam International Airport",
+            "tz": "Indian/Mauritius",
+            "lat": -20.43,
+            "lon": 57.684
+          },
+          "to": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "dep": "2026-09-28T16:40",
+          "arr": "2026-09-28T19:00"
         },
         {
-          "number": "SA585", "airline": "South African Airways", "operatedBy": "",
-          "from": { "code": "JNB", "city": "Johannesburg", "name": "O. R. Tambo International Airport", "tz": "Africa/Johannesburg", "lat": -26.133, "lon": 28.25 },
-          "to": { "code": "DUR", "city": "Durban", "name": "King Shaka International Airport", "tz": "Africa/Johannesburg", "lat": -29.614, "lon": 31.12 },
-          "dep": "2026-09-28T21:20", "arr": "2026-09-28T22:30"
+          "number": "SA585",
+          "airline": "South African Airways",
+          "operatedBy": "",
+          "from": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "to": {
+            "code": "DUR",
+            "city": "Durban",
+            "name": "King Shaka International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -29.614,
+            "lon": 31.12
+          },
+          "dep": "2026-09-28T21:20",
+          "arr": "2026-09-28T22:30"
+        }
+      ],
+      "screenshots": [],
+      "notes": ""
+    },
+    {
+      "id": "mkte-kenya-2026-10",
+      "title": "MKTE Kenya",
+      "destination": "Kenya",
+      "destAirport": "NBO",
+      "destTz": "Africa/Nairobi",
+      "leaveHome": "2026-10-05T06:10",
+      "arriveHome": "2026-10-09T14:55",
+      "days": [
+        {
+          "from": "2026-10-05",
+          "to": "2026-10-05",
+          "label": "Flying to Nairobi",
+          "kind": "flying"
+        },
+        {
+          "from": "2026-10-06",
+          "to": "2026-10-08",
+          "label": "Attending MKTE",
+          "kind": "event"
+        },
+        {
+          "from": "2026-10-09",
+          "to": "2026-10-09",
+          "label": "Flying home",
+          "kind": "flying"
+        }
+      ],
+      "flights": [
+        {
+          "number": "FA660",
+          "airline": "FlySafair",
+          "operatedBy": "",
+          "from": {
+            "code": "DUR",
+            "city": "Durban",
+            "name": "King Shaka International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -29.614,
+            "lon": 31.12
+          },
+          "to": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "dep": "2026-10-05T08:40",
+          "arr": "2026-10-05T09:50"
+        },
+        {
+          "number": "4Z70",
+          "airline": "Airlink",
+          "operatedBy": "",
+          "from": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "to": {
+            "code": "NBO",
+            "city": "Nairobi",
+            "name": "Jomo Kenyatta International Airport",
+            "tz": "Africa/Nairobi",
+            "lat": -1.319,
+            "lon": 36.928
+          },
+          "dep": "2026-10-05T13:30",
+          "arr": "2026-10-05T18:30"
+        },
+        {
+          "number": "4Z71",
+          "airline": "Airlink",
+          "operatedBy": "",
+          "from": {
+            "code": "NBO",
+            "city": "Nairobi",
+            "name": "Jomo Kenyatta International Airport",
+            "tz": "Africa/Nairobi",
+            "lat": -1.319,
+            "lon": 36.928
+          },
+          "to": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "dep": "2026-10-09T06:30",
+          "arr": "2026-10-09T09:40"
+        },
+        {
+          "number": "FA401",
+          "airline": "FlySafair",
+          "operatedBy": "",
+          "from": {
+            "code": "JNB",
+            "city": "Johannesburg",
+            "name": "O. R. Tambo International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -26.133,
+            "lon": 28.25
+          },
+          "to": {
+            "code": "DUR",
+            "city": "Durban",
+            "name": "King Shaka International Airport",
+            "tz": "Africa/Johannesburg",
+            "lat": -29.614,
+            "lon": 31.12
+          },
+          "dep": "2026-10-09T12:55",
+          "arr": "2026-10-09T14:10"
         }
       ],
       "screenshots": [],
