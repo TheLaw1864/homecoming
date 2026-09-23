@@ -76,7 +76,8 @@ const HC = (() => {
     // Without a "leave home" time, a trip whose first flight isn't from home is already under way
     const f0dep = flights[0]?.depMs, awayAlready = flights[0] && flights[0].from.code !== site.home.airport;
     const dayStart = toUtc(firstDay, homeTz);
-    const startMs = leaveMs ?? (awayAlready ? Math.min(dayStart ?? Infinity, f0dep - 3 * 86400e3) : f0dep ?? dayStart ?? homeMs);
+    // (startMs is then -Infinity: away since some unknown time)
+    const startMs = leaveMs ?? (awayAlready ? -Infinity : f0dep ?? dayStart ?? homeMs);
     const endMs = homeMs ?? flights.at(-1)?.arrMs ?? startMs;
     // Where Dakotah spends the trip: the arrival airport of the last outbound flight
     // (set from the destination airport in the admin; otherwise guessed from the flights)
@@ -85,11 +86,17 @@ const HC = (() => {
     return { ...trip, flights, leaveMs, homeMs, startMs, endMs, destTz };
   }
 
+  // "Fri 25 - Mon 28 Sept", falling back to the first planned day when the leave time is unknown
+  function tripRange(p, site) {
+    const from = isFinite(p.startMs) ? ymdIn(site.home.tz, p.startMs) : ((p.days || []).map(d => d.from).sort()[0] || localDate(p.arriveHome));
+    return niceRange(from, localDate(p.arriveHome) || from);
+  }
+
   async function loadJson(path) {
     const r = await fetch(path + (path.includes("?") ? "&" : "?") + "v=" + Date.now(), { cache: "no-store" });
     if (!r.ok) throw new Error(path + " " + r.status);
     return r.json();
   }
 
-  return { tzOffset, toUtc, localDate, localTime, niceDate, niceRange, clockIn, ymdIn, gmtLabel, dur, esc, prepareTrip, loadJson };
+  return { tzOffset, toUtc, localDate, localTime, niceDate, niceRange, clockIn, ymdIn, gmtLabel, dur, esc, prepareTrip, tripRange, loadJson };
 })();

@@ -60,3 +60,4 @@ h2 { font: 400 clamp(30px, 4.5vw, 44px)/1 var(--display); margin: 0; text-wrap: 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+[hidden] { display: none !important; }

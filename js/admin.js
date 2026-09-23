@@ -1,5 +1,5 @@
 // Trip admin: reads and writes data/*.json and images in the GitHub repo through the GitHub API.
-const { esc, toUtc, niceRange, localDate } = HC;
+const { esc, toUtc } = HC;
 const $ = id => document.getElementById(id);
 const store = {
   get: k => { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
@@ -122,8 +122,7 @@ document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () =>
 
 // ---------- Trip list ----------
 function tripRange(tr) {
-  const p = HC.prepareTrip(tr, site);
-  return niceRange(HC.ymdIn(site.home.tz, p.startMs), localDate(tr.arriveHome));
+  return HC.tripRange(HC.prepareTrip(tr, site), site);
 }
 function renderTrips() {
   const list = [...tripsDoc.trips].sort((a, b) => (a.arriveHome || "").localeCompare(b.arriveHome || ""));

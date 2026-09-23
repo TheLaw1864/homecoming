@@ -75,7 +75,7 @@
       $("countLabel").textContent = "Leaving home in";
       $("badge").textContent = "Bon voyage!";
     } else if (phase === "away") {
-      $("eyebrow").textContent = `${tr.title} · ${niceRange(ymdIn(site.home.tz, tr.startMs), localDate(tr.arriveHome))}`;
+      $("eyebrow").textContent = `${tr.title} · ${HC.tripRange(tr, site)}`;
       $("headline").innerHTML = `${nm()} is coming <span class="hl">home!</span>`;
       $("lede").innerHTML = `Back in <strong>${home}</strong> on <strong>${homeWhen(tr)}</strong>. Get the snacks ready.`;
       $("countLabel").textContent = "Home in";
@@ -297,7 +297,7 @@
     const others = upcoming.filter(tr => tr !== trip).length;
     $("tripCount").textContent = others; $("tripCount").dataset.n = others;
     const card = (tr, tag) => {
-      const range = niceRange(ymdIn(site.home.tz, tr.startMs), localDate(tr.arriveHome));
+      const range = HC.tripRange(tr, site);
       return `<a class="trip-card ${tr === trip ? "current" : ""}" href="#trip-${esc(tr.id)}">
         ${tag ? `<span class="kind ${tag[1]} tag">${tag[0]}</span>` : ""}
         <span class="t">${esc(tr.title)}</span><span class="d">${esc(tr.destination || "")} · ${esc(range)}</span></a>`;
@@ -358,9 +358,16 @@
     $("clkDest").textContent = clockIn(trip.destTz, t); $("clkDestTz").textContent = gmtLabel(trip.destTz, t);
     $("clkHomeLabel").textContent = `Time in ${site.home.city}`;
     $("clkHome").textContent = clockIn(site.home.tz, t); $("clkHomeTz").textContent = gmtLabel(site.home.tz, t);
-    const pct = Math.max(0, Math.min(1, (t - trip.startMs) / (trip.endMs - trip.startMs || 1)));
-    $("tripPct").textContent = Math.floor(pct * 100) + "%";
-    $("tripNote").textContent = `of ${dur(trip.endMs - trip.startMs)} away`;
+    if (isFinite(trip.startMs)) {
+      const pct = Math.max(0, Math.min(1, (t - trip.startMs) / (trip.endMs - trip.startMs || 1)));
+      $("tripPctLabel").textContent = "Trip complete";
+      $("tripPct").textContent = Math.floor(pct * 100) + "%";
+      $("tripNote").textContent = `of ${dur(trip.endMs - trip.startMs)} away`;
+    } else {
+      $("tripPctLabel").textContent = "Home at";
+      $("tripPct").textContent = localTime(trip.arriveHome);
+      $("tripNote").textContent = `${niceDate(localDate(trip.arriveHome))} · ${site.home.city} time`;
+    }
     markPlan(trip, t); markFlights(trip, t);
     celebrating = phase === "home";
   }
