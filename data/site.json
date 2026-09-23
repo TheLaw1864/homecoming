@@ -51,6 +51,51 @@
   ],
   "reasons": [
     {
+      "src": "img/why13.jpg",
+      "caption": "Dinner date",
+      "group": "family"
+    },
+    {
+      "src": "img/why16.jpg",
+      "caption": "Slushie sharing",
+      "group": "family"
+    },
+    {
+      "src": "img/why19.jpg",
+      "caption": "Travel buddies",
+      "group": "family"
+    },
+    {
+      "src": "img/why17.jpg",
+      "caption": "Ice cream run",
+      "group": "family"
+    },
+    {
+      "src": "img/why20.jpg",
+      "caption": "Road trip crew",
+      "group": "family"
+    },
+    {
+      "src": "img/why21.jpg",
+      "caption": "Backseat smiles",
+      "group": "family"
+    },
+    {
+      "src": "img/why15.jpg",
+      "caption": "Backyard bandits",
+      "group": "family"
+    },
+    {
+      "src": "img/why29.jpg",
+      "caption": "Dress-up dinner",
+      "group": "family"
+    },
+    {
+      "src": "img/why23.jpg",
+      "caption": "Family dinner",
+      "group": "family"
+    },
+    {
       "src": "img/p10.jpg",
       "caption": "Cuddles on demand",
       "group": "animals"
@@ -58,6 +103,56 @@
     {
       "src": "img/p12.jpg",
       "caption": "The best nap buddy",
+      "group": "animals"
+    },
+    {
+      "src": "img/why30.jpg",
+      "caption": "Selfie with the boss",
+      "group": "animals"
+    },
+    {
+      "src": "img/why28.jpg",
+      "caption": "Say cheese",
+      "group": "animals"
+    },
+    {
+      "src": "img/why31.jpg",
+      "caption": "Chin scratches",
+      "group": "animals"
+    },
+    {
+      "src": "img/why27.jpg",
+      "caption": "Ball is life",
+      "group": "animals"
+    },
+    {
+      "src": "img/why26.jpg",
+      "caption": "Couch guardian",
+      "group": "animals"
+    },
+    {
+      "src": "img/why25.jpg",
+      "caption": "Puppy-dog eyes",
+      "group": "animals"
+    },
+    {
+      "src": "img/why14.jpg",
+      "caption": "Sofa hog",
+      "group": "animals"
+    },
+    {
+      "src": "img/why24.jpg",
+      "caption": "Hello, gorgeous",
+      "group": "animals"
+    },
+    {
+      "src": "img/why18.jpg",
+      "caption": "Horse hugs",
+      "group": "animals"
+    },
+    {
+      "src": "img/why22.jpg",
+      "caption": "Show day",
       "group": "animals"
     }
   ]
