@@ -1,0 +1,32 @@
+{
+  "trips": [
+    {
+      "id": "mauritius-2026-09",
+      "title": "Mauritius launch",
+      "destination": "Mauritius",
+      "destAirport": "MRU",
+      "destTz": "Indian/Mauritius",
+      "leaveHome": null,
+      "arriveHome": "2026-09-28T22:30",
+      "days": [
+        { "from": "2026-09-28", "to": "2026-09-28", "label": "Flying home", "kind": "flying" }
+      ],
+      "flights": [
+        {
+          "number": "MK949", "airline": "Air Mauritius", "operatedBy": "South African Airways",
+          "from": { "code": "MRU", "city": "Mauritius", "name": "Sir Seewoosagur Ramgoolam International Airport", "tz": "Indian/Mauritius", "lat": -20.43, "lon": 57.684 },
+          "to": { "code": "JNB", "city": "Johannesburg", "name": "O. R. Tambo International Airport", "tz": "Africa/Johannesburg", "lat": -26.133, "lon": 28.25 },
+          "dep": "2026-09-28T16:40", "arr": "2026-09-28T19:00"
+        },
+        {
+          "number": "SA585", "airline": "South African Airways", "operatedBy": "",
+          "from": { "code": "JNB", "city": "Johannesburg", "name": "O. R. Tambo International Airport", "tz": "Africa/Johannesburg", "lat": -26.133, "lon": 28.25 },
+          "to": { "code": "DUR", "city": "Durban", "name": "King Shaka International Airport", "tz": "Africa/Johannesburg", "lat": -29.614, "lon": 31.12 },
+          "dep": "2026-09-28T21:20", "arr": "2026-09-28T22:30"
+        }
+      ],
+      "screenshots": [],
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Where's Dakotah?</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-20 -20 40 40'%3E%3Ccircle r='20' fill='%230d0f2e'/%3E%3Cpath d='M13 0 L-3 -3 L-7 -13 L-10 -13 L-7 -3 L-12 -3 L-14 -7 L-16 -7 L-15 0 L-16 7 L-14 7 L-12 3 L-7 3 L-10 13 L-7 13 L-3 3 Z' fill='%23ffc857' transform='rotate(-35)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<style>
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding-block: 16px 56px; display: grid; gap: 56px; }
+
+  /* Top bar */
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px; }
+  .brand { font: 400 20px/1 var(--display); color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+  .brand svg { flex: none; }
+  .trips-btn { position: relative; }
+  .trips-btn .count[data-n="0"] { display: none; }
+  .trips-btn .count { background: var(--coral); color: #fff; border-radius: 999px; font: 700 12px/1 var(--mono); padding: 4px 7px; }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; }
+  .eyebrow { font: 700 12px/1.3 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); display: inline-flex; align-items: center; gap: 10px; }
+  .eyebrow .dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--mint); animation: ping 1.8s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 #6ff0b480; } 100% { box-shadow: 0 0 0 10px #6ff0b400; } }
+  h1 { font: 400 clamp(44px, 8vw, 88px)/.95 var(--display); margin: 18px 0 14px; letter-spacing: -.01em; text-wrap: balance; }
+  h1 .hl {
+    background: linear-gradient(95deg, var(--coral), var(--gold) 55%, var(--coral)); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .lede { color: var(--muted); font-size: 18px; max-width: 38ch; margin: 0 0 28px; }
+  .lede strong { color: var(--ink); }
+  .count-label { margin-bottom: 12px; }
+
+  .board { display: flex; flex-wrap: wrap; gap: 12px; }
+  .unit { display: grid; gap: 8px; justify-items: center; }
+  .flaps { display: flex; gap: 4px; }
+  .flap {
+    position: relative; width: clamp(36px, 5vw, 58px); height: clamp(54px, 7.4vw, 84px);
+    background: linear-gradient(#262a63 0 50%, #1e2256 50% 100%); border-radius: 8px; display: grid; place-items: center;
+    font: 700 clamp(28px, 4.4vw, 50px)/1 var(--mono); color: var(--ink); box-shadow: 0 6px 0 #0a0c26, inset 0 1px 0 #ffffff14;
+    font-variant-numeric: tabular-nums; perspective: 300px; overflow: hidden;
+  }
+  .flap::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: #0a0c26; }
+  .flap span { display: block; }
+  .flap.flip span { animation: flip .45s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes flip { 0% { transform: rotateX(90deg); opacity: .3; } 100% { transform: rotateX(0); opacity: 1; } }
+  .unit .label { letter-spacing: .2em; }
+  .sep { font: 700 clamp(28px, 5vw, 44px)/1 var(--mono); color: var(--coral); align-self: start; padding-top: clamp(10px, 2vw, 18px); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  .unit.sec .flap { background: linear-gradient(#5a2a52 0 50%, #4d2347 50% 100%); }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+  .stack { position: relative; width: min(100%, 360px); aspect-ratio: 4 / 5; margin: 0 auto; max-width: 100%; }
+  .polaroid { position: absolute; inset: 0; margin: 0; background: var(--paper); padding: 14px 14px 58px; border-radius: 4px; box-shadow: 0 24px 50px #00000070; }
+  .polaroid img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 2px; background: #ddd; transition: opacity .6s; }
+  .polaroid.back1 { transform: rotate(-9deg) translate(-18px, 10px); }
+  .polaroid.back2 { transform: rotate(7deg) translate(20px, 4px); }
+  .polaroid.front { transform: rotate(-2deg); animation: bob 6s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: rotate(1.5deg) translateY(-6px); } }
+  .polaroid figcaption { position: absolute; left: 0; right: 0; bottom: 16px; text-align: center; font: 400 20px/1 var(--display); color: #2a2450; transition: opacity .6s; }
+  .tape { position: absolute; top: -14px; left: 50%; width: 110px; height: 30px; transform: translateX(-50%) rotate(-4deg); background: #ffc857b8; z-index: 2; border-radius: 2px; }
+  .badge {
+    position: absolute; right: -14px; top: 28px; z-index: 3; width: 104px; height: 104px; border-radius: 50%;
+    background: var(--coral); color: #fff; display: grid; place-items: center; text-align: center; padding: 8px;
+    font: 400 17px/1.05 var(--display); transform: rotate(12deg); box-shadow: 0 10px 24px #0007; animation: wiggle 3s ease-in-out infinite;
+  }
+  @keyframes wiggle { 50% { transform: rotate(4deg) scale(1.06); } }
+
+  .sec-head { margin-bottom: 18px; }
+
+  /* Tracker */
+  .tracker { background: var(--night-2); border: 1px solid var(--line); border-radius: 22px; padding: clamp(16px, 3vw, 28px); display: grid; gap: 20px; }
+  .status { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; background: var(--panel); border-radius: 14px; padding: 16px 18px; }
+  .pill { font: 700 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 8px 12px; border-radius: 999px; background: var(--sky); color: var(--night); white-space: nowrap; }
+  .pill.air { background: var(--coral); color: #fff; }
+  .pill.ground { background: var(--gold); }
+  .pill.home { background: var(--mint); }
+  .status-text { font-size: 18px; font-weight: 500; flex: 1 1 260px; }
+  .status-text small { display: block; color: var(--muted); font-size: 14px; font-weight: 400; }
+  .map-box { border-radius: 14px; overflow: hidden; background: radial-gradient(ellipse at 60% 40%, #1b3a6b 0%, #122450 55%, #0f1c42 100%); }
+  .map-box svg { display: block; width: 100%; height: auto; }
+  .clocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .clock { background: var(--panel); border-radius: 14px; padding: 14px 16px; }
+  .clock .v { font: 700 26px/1.2 var(--mono); font-variant-numeric: tabular-nums; margin-top: 6px; }
+  .clock .n { color: var(--muted); font-size: 13px; }
+
+  /* Plan */
+  .plan { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .plan li { display: grid; grid-template-columns: 170px auto 1fr; align-items: center; gap: 16px; background: var(--night-2); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+  .plan .when { font: 700 14px/1.3 var(--mono); }
+  .plan .what { font-size: 17px; font-weight: 500; }
+  .kind { font: 700 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: var(--line); color: var(--ink); white-space: nowrap; justify-self: start; }
+  .kind.flying { background: var(--coral); color: #fff; }
+  .kind.event { background: var(--gold); color: var(--night); }
+  .kind.meetings { background: var(--sky); color: var(--night); }
+  .kind.free { background: var(--mint); color: var(--night); }
+  .plan li.today { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  .plan li.today .when::after { content: " · TODAY"; color: var(--gold); }
+  .plan li.done { opacity: .5; }
+
+  /* Boarding passes */
+  .flights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 18px; }
+  .pass { background: var(--paper); color: var(--paper-ink); border-radius: 18px; overflow: hidden; box-shadow: 0 18px 40px #0006; }
+  .pass-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: var(--coral); color: #fff; gap: 10px; flex-wrap: wrap; }
+  .pass:nth-child(3n+2) .pass-top { background: #2b6fd6; }
+  .pass:nth-child(3n+3) .pass-top { background: #7a4bd1; }
+  .pass-top .fl { font: 700 18px/1 var(--mono); letter-spacing: .06em; }
+  .pass-top .air { font-size: 13px; opacity: .92; }
+  .pass-body { padding: 20px; display: grid; gap: 16px; }
+  .route { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+  .route .code { font: 400 44px/1 var(--display); }
+  .route .city { font-size: 13px; color: #5d5a80; }
+  .route .to { text-align: right; }
+  .route .mid { color: #9994c0; font: 700 12px/1.3 var(--mono); text-align: center; }
+  .route .mid svg { display: block; margin: 0 auto 4px; }
+  .times { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 2px dashed #d9d3e8; padding-top: 14px; }
+  .times .label { color: #8a86ad; }
+  .times .v { font: 700 22px/1.3 var(--mono); font-variant-numeric: tabular-nums; }
+  .times .z { font-size: 12px; color: #6f6b93; }
+  .times .r { text-align: right; }
+  .pass-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; }
+  .pass-foot a { color: var(--paper-ink); font-weight: 700; }
+  .leg-status { font: 700 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; background: var(--paper-ink); color: #fff; }
+  .leg-status.air { background: var(--coral); }
+  .leg-status.landed { background: #2f8f62; }
+  .layover { grid-column: 1 / -1; text-align: center; color: var(--muted); font: 700 13px/1.4 var(--mono); letter-spacing: .06em; }
+  .layover b { color: var(--gold); }
+  .shots { display: flex; flex-wrap: wrap; gap: 14px; }
+  .shots img { max-width: min(100%, 520px); border-radius: 12px; border: 1px solid var(--line); }
+
+  /* Photo wall */
+  .wall { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; padding-top: 8px; }
+  .snap { width: 180px; max-width: 100%; background: var(--paper); padding: 10px 10px 40px; border-radius: 3px; position: relative; box-shadow: 0 14px 30px #0006; transition: transform .25s; margin: 0; }
+  .snap img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .snap figcaption { position: absolute; left: 0; right: 0; bottom: 11px; text-align: center; font: 400 15px/1 var(--display); color: #2a2450; }
+  .snap:nth-child(odd) { transform: rotate(-3deg); }
+  .snap:nth-child(even) { transform: rotate(2.5deg) translateY(8px); }
+  .snap:hover { transform: rotate(0) scale(1.06); z-index: 2; }
+
+  footer { text-align: center; color: var(--muted); font-size: 14px; }
+  footer b { font: 400 22px/1.2 var(--display); color: var(--ink); display: block; margin-bottom: 4px; }
+
+  /* Trips drawer */
+  .scrim { position: fixed; inset: 0; background: #05061acc; z-index: 60; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100%); z-index: 61; background: var(--night-2);
+    border-left: 1px solid var(--line); transform: translateX(100%); transition: transform .3s ease; overflow-y: auto;
+    padding: calc(20px + env(safe-area-inset-top, 0px)) 20px calc(20px + env(safe-area-inset-bottom, 0px));
+    display: grid; align-content: start; gap: 14px;
+  }
+  body.drawer-open .scrim { opacity: 1; pointer-events: auto; }
+  body.drawer-open .drawer { transform: none; }
+  .drawer-head { display: flex; justify-content: space-between; align-items: center; }
+  .drawer-head h2 { font-size: 30px; }
+  .close { background: none; border: 0; color: var(--ink); font-size: 28px; cursor: pointer; line-height: 1; padding: 6px 10px; border-radius: 8px; }
+  .trip-card { display: grid; gap: 4px; text-decoration: none; color: var(--ink); background: var(--panel); border-radius: 14px; padding: 16px; border: 1px solid transparent; }
+  .trip-card:hover { border-color: var(--line); }
+  .trip-card.current { border-color: var(--gold); }
+  .trip-card .t { font: 400 22px/1.1 var(--display); }
+  .trip-card .d { color: var(--muted); font-size: 14px; }
+  .trip-card .tag { justify-self: start; margin-bottom: 4px; }
+  .drawer .label { margin-top: 10px; }
+  .empty { color: var(--muted); }
+
+  body.landed .counting-only, body:not(.landed) .landed-only { display: none; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; }
+    .stack { width: min(78%, 320px); margin-top: 12px; }
+    .clocks { grid-template-columns: 1fr 1fr; }
+    .clocks .clock:last-child { grid-column: 1 / -1; }
+    .plan li { grid-template-columns: 1fr auto; }
+    .plan .what { grid-column: 1 / -1; }
+  }
+  @media (max-width: 420px) {
+    .board { gap: 8px; }
+    .sep { display: none; }
+    .flap { width: 36px; height: 54px; font-size: 30px; }
+    .badge { width: 84px; height: 84px; font-size: 14px; right: -8px; }
+    .route .code { font-size: 36px; }
+    .trips-btn .txt { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main class="wrap">
+  <header class="topbar">
+    <a class="brand" href="./">
+      <svg width="28" height="28" viewBox="-20 -20 40 40" aria-hidden="true"><circle r="20" fill="#1d2152"/><path d="M13 0 L-3 -3 L-7 -13 L-10 -13 L-7 -3 L-12 -3 L-14 -7 L-16 -7 L-15 0 L-16 7 L-14 7 L-12 3 L-7 3 L-10 13 L-7 13 L-3 3 Z" fill="#ffc857" transform="rotate(-35)"/></svg>
+      <span id="brandName">Where's Dakotah?</span>
+    </a>
+    <button class="btn small ghost trips-btn" id="tripsBtn" type="button" aria-controls="drawer" aria-expanded="false">
+      <span class="txt">Other trips</span><span class="count" id="tripCount">0</span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><span class="dot"></span><span id="eyebrow">Loading trips</span></span>
+      <h1 id="headline">Where's <span class="hl">Dakotah?</span></h1>
+      <p class="lede" id="lede"></p>
+      <div id="countWrap">
+        <div class="label count-label" id="countLabel"></div>
+        <div class="board" aria-live="off">
+          <div class="unit"><div class="flaps" data-u="d"></div><span class="label">Days</span></div>
+          <div class="sep">:</div>
+          <div class="unit"><div class="flaps" data-u="h"></div><span class="label">Hours</span></div>
+          <div class="sep">:</div>
+          <div class="unit"><div class="flaps" data-u="m"></div><span class="label">Minutes</span></div>
+          <div class="sep">:</div>
+          <div class="unit sec"><div class="flaps" data-u="s"></div><span class="label">Seconds</span></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="partyBtn" type="button">Throw confetti</button>
+        <a class="btn ghost" href="#tracker" id="trackLink">Where is Dakotah now?</a>
+      </div>
+    </div>
+    <div class="stack" aria-label="Photos">
+      <div class="polaroid back1"><img id="back1" alt=""></div>
+      <div class="polaroid back2"><img id="back2" alt=""></div>
+      <figure class="polaroid front">
+        <span class="tape"></span>
+        <img id="heroImg" alt="Dakotah">
+        <figcaption id="heroCap"></figcaption>
+      </figure>
+      <div class="badge" id="badge">See you soon!</div>
+    </div>
+  </section>
+
+  <section id="tracker" hidden>
+    <div class="sec-head"><h2>Where's Dakotah?</h2><p class="sub">Worked out from the flight schedule and updates by itself.</p></div>
+    <div class="tracker">
+      <div class="status"><span class="pill" id="pill"></span><div class="status-text" id="statusText"></div></div>
+      <div class="map-box" id="mapBox"></div>
+      <div class="clocks">
+        <div class="clock"><div class="label" id="clkDestLabel">Time there</div><div class="v" id="clkDest">--:--</div><div class="n" id="clkDestTz"></div></div>
+        <div class="clock"><div class="label" id="clkHomeLabel">Time at home</div><div class="v" id="clkHome">--:--</div><div class="n" id="clkHomeTz"></div></div>
+        <div class="clock"><div class="label">Trip complete</div><div class="v" id="tripPct">0%</div><div class="n" id="tripNote"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="planSec" hidden>
+    <div class="sec-head"><h2>The plan</h2><p class="sub" id="planSub"></p></div>
+    <ul class="plan" id="plan"></ul>
+  </section>
+
+  <section id="flightSec" hidden>
+    <div class="sec-head"><h2>The flights</h2><p class="sub">All times are local to each airport. Tap a flight to track it live.</p></div>
+    <div class="flights" id="flights"></div>
+  </section>
+
+  <section id="shotSec" hidden>
+    <div class="sec-head"><h2>The itinerary</h2></div>
+    <div class="shots" id="shots"></div>
+  </section>
+
+  <section id="wallSec" hidden>
+    <div class="sec-head"><h2>The one we're waiting for</h2><p class="sub">A few favourites from the family album.</p></div>
+    <div class="wall" id="wall"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Trips" aria-hidden="true">
+  <div class="drawer-head"><h2>Trips</h2><button class="close" id="closeDrawer" type="button" aria-label="Close">&times;</button></div>
+  <div id="tripList"></div>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

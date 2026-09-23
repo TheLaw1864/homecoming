@@ -1,0 +1,62 @@
+/* A night sky over the ocean: one deliberate dark look for the whole site */
+:root {
+  color-scheme: dark;
+  --night: #0d0f2e;
+  --night-2: #171a45;
+  --panel: #1d2152;
+  --line: #343a7a;
+  --ink: #f7f2ff;
+  --muted: #a7abdb;
+  --coral: #ff6b5a;
+  --gold: #ffc857;
+  --sky: #5cc8ff;
+  --mint: #6ff0b4;
+  --paper: #fbf8f2;
+  --paper-ink: #1d1a3d;
+  --display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--night); }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1px 1px at 12% 18%, #fff9 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 8%, #fff8 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 42% 30%, #fffc 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 44%, #fff7 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 62%, #fff8 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 64% 70%, #fffa 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 88%, #fff6 50%, transparent 51%),
+    radial-gradient(ellipse 90% 60% at 80% -10%, #3b2a7a 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 0% 110%, #5a2150 0%, transparent 60%),
+    var(--night);
+  background-size: 340px 340px, 420px 420px, 380px 380px, 300px 300px, 460px 460px, 360px 360px, 400px 400px, 100% 100%, 100% 100%, auto;
+  background-attachment: fixed;
+  color: var(--ink);
+  font: 16px/1.55 var(--body);
+  padding-inline: 16px;
+  overflow-x: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+a { color: var(--sky); }
+.btn {
+  font: 700 15px/1 var(--body); color: var(--night); background: var(--gold);
+  border: 0; border-radius: 999px; padding: 14px 22px; cursor: pointer;
+  box-shadow: 0 4px 0 #b5862a; transition: transform .1s, box-shadow .1s;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #b5862a; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.btn.small { padding: 9px 14px; font-size: 14px; }
+.btn:disabled { opacity: .5; cursor: default; transform: none; }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+h2 { font: 400 clamp(30px, 4.5vw, 44px)/1 var(--display); margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 6px 0 0; }
+.label { font: 700 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
