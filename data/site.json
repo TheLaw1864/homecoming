@@ -1,12 +1,64 @@
 {
   "name": "Dakotah",
-  "home": { "city": "Durban", "airport": "DUR", "tz": "Africa/Johannesburg", "lat": -29.614, "lon": 31.12 },
+  "home": {
+    "city": "Durban",
+    "airport": "DUR",
+    "tz": "Africa/Johannesburg",
+    "lat": -29.614,
+    "lon": 31.12
+  },
   "photos": [
-    { "src": "img/p6.jpg", "caption": "Rosette collector" },
-    { "src": "img/p2.jpg", "caption": "That smile" },
-    { "src": "img/p5.jpg", "caption": "Horse whisperer" },
-    { "src": "img/p3.jpg", "caption": "Bumper car champ" },
-    { "src": "img/p8.jpg", "caption": "Suited & booted" },
-    { "src": "img/p7.jpg", "caption": "Very mature" }
+    {
+      "src": "img/p6.jpg",
+      "caption": "Rosette collector"
+    },
+    {
+      "src": "img/p2.jpg",
+      "caption": "That smile"
+    },
+    {
+      "src": "img/p5.jpg",
+      "caption": "Horse whisperer"
+    },
+    {
+      "src": "img/p3.jpg",
+      "caption": "Bumper car champ"
+    },
+    {
+      "src": "img/p8.jpg",
+      "caption": "Suited & booted"
+    },
+    {
+      "src": "img/p7.jpg",
+      "caption": "Very mature"
+    },
+    {
+      "src": "img/p9.jpg",
+      "caption": "Pancake chef"
+    },
+    {
+      "src": "img/p10.jpg",
+      "caption": "Couch buddy"
+    },
+    {
+      "src": "img/p11.jpg",
+      "caption": "Up close and personal"
+    },
+    {
+      "src": "img/p12.jpg",
+      "caption": "Nap squad"
+    }
+  ],
+  "reasons": [
+    {
+      "src": "img/p10.jpg",
+      "caption": "Cuddles on demand",
+      "group": "animals"
+    },
+    {
+      "src": "img/p12.jpg",
+      "caption": "The best nap buddy",
+      "group": "animals"
+    }
   ]
 }

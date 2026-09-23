@@ -11,7 +11,6 @@ let token = store.get("hc.ghToken"), repo = store.get("hc.ghRepo") || DEFAULT_RE
 let site = null, siteSha = null, tripsDoc = null, tripsSha = null, airports = null;
 let editing = null;        // trip being edited (a copy)
 let newShots = [];         // [{file, dataUrl, show}]
-let photos = [];           // working copy of site.photos, new ones carry {file, dataUrl}
 
 function toast(msg, err) {
   const t = document.createElement("div");
@@ -104,7 +103,7 @@ async function connect() {
     store.set("hc.ghToken", token); store.set("hc.ghRepo", repo);
     await Promise.all([loadData(), loadAirports()]);
     $("connect").hidden = true; $("app").hidden = false; $("signOut").hidden = false;
-    renderTrips(); renderSettings(); photos = site.photos.map(p => ({ ...p })); renderPhotos();
+    renderTrips(); renderSettings(); galleries.forEach(g => g.load());
   } catch (e) {
     $("connect").hidden = false; $("app").hidden = true;
     $("connectMsg").textContent = e.status === 401 ? "GitHub didn't accept that token. Check it and try again." : e.status === 404 ? `Can't find ${repo}, or the token doesn't include it.` : e.message;
@@ -116,7 +115,7 @@ $("signOut").addEventListener("click", () => { store.set("hc.ghToken", ""); loca
 // ---------- Tabs ----------
 document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
   document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === b));
-  for (const t of ["trips", "photos", "settings"]) $("tab-" + t).hidden = t !== b.dataset.tab;
+  for (const t of ["trips", "photos", "why", "settings"]) $("tab-" + t).hidden = t !== b.dataset.tab;
   $("editor").hidden = true;
 }));
 
@@ -416,49 +415,63 @@ $("saveTrip").addEventListener("click", async () => {
   } finally { btn.disabled = false; }
 });
 
-// ---------- Photos ----------
-function renderPhotos() {
-  $("photoGrid").innerHTML = photos.map((p, i) => `
-    <div class="photo">
-      <img src="${p.dataUrl || esc(p.src)}" alt="">
-      <input type="text" data-cap="${i}" value="${esc(p.caption || "")}" placeholder="Caption" aria-label="Caption">
-      <div class="row-actions">
-        <button class="x" data-up="${i}" type="button" ${i ? "" : "disabled"} aria-label="Move earlier">&larr;</button>
-        <button class="x" data-rm="${i}" type="button">Remove</button>
-      </div>
-    </div>`).join("") || `<p class="hint">No photos yet.</p>`;
+// ---------- Photo galleries (site.photos and site.reasons) ----------
+const GROUPS = [["family", "Family"], ["friends", "Friends"], ["animals", "Animals"]];
+function makeGallery(sectionId, key, { groups = false, noun = "photos" } = {}) {
+  const sec = $(sectionId), grid = sec.querySelector("[data-grid]"), input = sec.querySelector("[data-input]"), msg = sec.querySelector("[data-msg]"), saveBtn = sec.querySelector("[data-save]");
+  let items = [];
+  const render = () => {
+    grid.innerHTML = items.map((p, i) => `
+      <div class="photo">
+        <img src="${p.dataUrl || esc(p.src)}" alt="">
+        <input type="text" data-cap="${i}" value="${esc(p.caption || "")}" placeholder="${groups ? "Who or what, e.g. Gran" : "Caption"}" aria-label="Caption">
+        ${groups ? `<select data-group="${i}" aria-label="Group">${GROUPS.map(([v, l]) => `<option value="${v}" ${p.group === v ? "selected" : ""}>${l}</option>`).join("")}</select>` : ""}
+        <div class="row-actions">
+          <button class="x" data-up="${i}" type="button" ${i ? "" : "disabled"} aria-label="Move earlier">&larr;</button>
+          <button class="x" data-rm="${i}" type="button">Remove</button>
+        </div>
+      </div>`).join("") || `<p class="hint">No photos yet.</p>`;
+  };
+  grid.addEventListener("input", e => {
+    const c = e.target.closest("[data-cap]"), g = e.target.closest("[data-group]");
+    if (c) items[+c.dataset.cap].caption = c.value;
+    if (g) items[+g.dataset.group].group = g.value;
+  });
+  grid.addEventListener("change", e => { const g = e.target.closest("[data-group]"); if (g) items[+g.dataset.group].group = g.value; });
+  grid.addEventListener("click", e => {
+    const up = e.target.closest("[data-up]"), rm = e.target.closest("[data-rm]");
+    if (up) { const i = +up.dataset.up; [items[i - 1], items[i]] = [items[i], items[i - 1]]; render(); }
+    if (rm) { items.splice(+rm.dataset.rm, 1); render(); }
+  });
+  sec.querySelector("[data-add]").addEventListener("click", () => input.click());
+  input.addEventListener("change", async e => {
+    for (const file of e.target.files) items.push({ src: "", caption: "", ...(groups ? { group: "family" } : {}), dataUrl: await compress(await readDataUrl(file), 1000, .82) });
+    e.target.value = ""; render();
+  });
+  saveBtn.addEventListener("click", async () => {
+    saveBtn.disabled = true;
+    try {
+      const fresh = items.filter(p => p.dataUrl);
+      for (const [i, p] of fresh.entries()) {
+        msg.textContent = `Uploading photo ${i + 1} of ${fresh.length}...`;
+        p.src = `img/photo-${Date.now()}-${i}.jpg`;
+        await putFile(p.src, b64OfDataUrl(p.dataUrl), "Add photo");
+        delete p.dataUrl;
+      }
+      const latest = await getFile("data/site.json"); site = JSON.parse(latest.text); siteSha = latest.sha;
+      const before = site[key] || [];
+      site[key] = items.map(p => ({ src: p.src, caption: p.caption || "", ...(groups ? { group: p.group || "family" } : {}) }));
+      msg.textContent = "Saving...";
+      await saveSite(`Update ${noun}`);
+      // Delete removed files, unless the other gallery still uses them
+      const inUse = new Set([...(site.photos || []), ...(site.reasons || [])].map(p => p.src));
+      for (const old of before) if (!inUse.has(old.src)) { msg.textContent = "Removing old photos..."; await deleteFile(old.src, "Remove photo"); }
+      msg.textContent = ""; render(); toast("Saved. The live site updates in about a minute.");
+    } catch (e) { msg.textContent = saveError(e); } finally { saveBtn.disabled = false; }
+  });
+  return { load() { items = (site[key] || []).map(p => ({ ...p })); render(); } };
 }
-$("photoGrid").addEventListener("input", e => { const c = e.target.closest("[data-cap]"); if (c) photos[+c.dataset.cap].caption = c.value; });
-$("photoGrid").addEventListener("click", e => {
-  const up = e.target.closest("[data-up]"), rm = e.target.closest("[data-rm]");
-  if (up) { const i = +up.dataset.up; [photos[i - 1], photos[i]] = [photos[i], photos[i - 1]]; renderPhotos(); }
-  if (rm) { photos.splice(+rm.dataset.rm, 1); renderPhotos(); }
-});
-$("addPhoto").addEventListener("click", () => $("photoInput").click());
-$("photoInput").addEventListener("change", async e => {
-  for (const file of e.target.files) photos.push({ src: "", caption: "", dataUrl: await compress(await readDataUrl(file), 1000, .82) });
-  e.target.value = ""; renderPhotos();
-});
-$("savePhotos").addEventListener("click", async () => {
-  const btn = $("savePhotos"), msg = $("photoMsg"); btn.disabled = true;
-  try {
-    const fresh = photos.filter(p => p.dataUrl);
-    for (const [i, p] of fresh.entries()) {
-      msg.textContent = `Uploading photo ${i + 1} of ${fresh.length}...`;
-      p.src = `img/photo-${Date.now()}-${i}.jpg`;
-      await putFile(p.src, b64OfDataUrl(p.dataUrl), "Add photo");
-      delete p.dataUrl;
-    }
-    const latest = await getFile("data/site.json"); site = JSON.parse(latest.text); siteSha = latest.sha;
-    const before = site.photos;
-    site.photos = photos.map(p => ({ src: p.src, caption: p.caption || "" }));
-    msg.textContent = "Saving...";
-    await saveSite("Update photos");
-    const kept = new Set(photos.map(p => p.src));
-    for (const old of before) if (!kept.has(old.src)) { msg.textContent = "Removing old photos..."; await deleteFile(old.src, "Remove photo"); }
-    msg.textContent = ""; renderPhotos(); toast("Photos saved. The live site updates in about a minute.");
-  } catch (e) { msg.textContent = saveError(e); } finally { btn.disabled = false; }
-});
+const galleries = [makeGallery("tab-photos", "photos"), makeGallery("tab-why", "reasons", { groups: true, noun: "Why home photos" })];
 
 // ---------- Settings ----------
 function renderSettings() {

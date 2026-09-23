@@ -96,6 +96,7 @@
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="trips" aria-selected="true" type="button">Trips</button>
       <button class="tab" role="tab" data-tab="photos" aria-selected="false" type="button">Photos</button>
+      <button class="tab" role="tab" data-tab="why" aria-selected="false" type="button">Why home?</button>
       <button class="tab" role="tab" data-tab="settings" aria-selected="false" type="button">Settings</button>
     </nav>
 
@@ -153,12 +154,23 @@
     <section id="tab-photos" class="card" style="margin-top:16px" hidden>
       <div class="row-actions" style="justify-content:space-between">
         <h2>Photos</h2>
-        <button class="btn small" id="addPhoto" type="button">Add photos</button>
-        <input id="photoInput" type="file" accept="image/*" multiple hidden>
+        <button class="btn small" data-add type="button">Add photos</button>
       </div>
       <p class="hint">These rotate on the home page and fill the photo wall. The first one shows first.</p>
-      <div class="photos" id="photoGrid"></div>
-      <div class="row-actions"><button class="btn" id="savePhotos" type="button">Save photos</button><span class="hint" id="photoMsg"></span></div>
+      <input data-input type="file" accept="image/*" multiple hidden>
+      <div class="photos" data-grid></div>
+      <div class="row-actions"><button class="btn" data-save type="button">Save photos</button><span class="hint" data-msg></span></div>
+    </section>
+
+    <section id="tab-why" class="card" style="margin-top:16px" hidden>
+      <div class="row-actions" style="justify-content:space-between">
+        <h2>Why home?</h2>
+        <button class="btn small" data-add type="button">Add photos</button>
+      </div>
+      <p class="hint">Family, friends and animals for the "Why am I so excited to go home?" section. Say who's in each one.</p>
+      <input data-input type="file" accept="image/*" multiple hidden>
+      <div class="photos" data-grid></div>
+      <div class="row-actions"><button class="btn" data-save type="button">Save</button><span class="hint" data-msg></span></div>
     </section>
 
     <section id="tab-settings" class="card" style="margin-top:16px" hidden>

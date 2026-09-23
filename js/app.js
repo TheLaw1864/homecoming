@@ -273,6 +273,7 @@
 
   let heroTimer = null;
   function renderPhotos() {
+    renderWhy();
     const ph = site.photos || [];
     $("wallSec").hidden = !ph.length;
     $("wall").innerHTML = ph.map(p => `<figure class="snap"><img src="${esc(p.src)}" alt="${esc(p.caption || site.name)}" loading="lazy"><figcaption>${esc(p.caption)}</figcaption></figure>`).join("");
@@ -288,6 +289,31 @@
       setTimeout(() => { show(); $("heroImg").style.opacity = 1; $("heroCap").style.opacity = 1; }, 600);
     }, 4200);
   }
+
+  // ---------- Why home ----------
+  const GROUP_NAMES = { family: "Family", friends: "Friends", animals: "Animals" };
+  const heart = `<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 5.3 3.1 1.7-1.9 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="#fff"/></svg>`;
+  let whyFilter = "all";
+  function renderWhy() {
+    const items = site.reasons || [];
+    $("why").hidden = $("whyLink").hidden = !items.length;
+    if (!items.length) return;
+    $("whySub").textContent = `Everyone (and every paw) waiting back in ${site.home.city}.`;
+    const counts = {};
+    items.forEach(p => { counts[p.group] = (counts[p.group] || 0) + 1; });
+    const groups = Object.keys(GROUP_NAMES).filter(g => counts[g]);
+    if (whyFilter !== "all" && !counts[whyFilter]) whyFilter = "all";
+    $("whyChips").hidden = groups.length < 2;
+    $("whyChips").innerHTML = [["all", "Everyone", items.length], ...groups.map(g => [g, GROUP_NAMES[g], counts[g]])]
+      .map(([g, l, n]) => `<button class="chip" type="button" data-g="${g}" aria-pressed="${g === whyFilter}">${l}<b>${n}</b></button>`).join("");
+    $("whyGrid").innerHTML = items.filter(p => whyFilter === "all" || p.group === whyFilter).map(p => `
+      <figure class="why-card">
+        <span class="heart">${heart}</span>
+        <img src="${esc(p.src)}" alt="${esc(p.caption || GROUP_NAMES[p.group] || "")}" loading="lazy">
+        <figcaption><span class="who">${esc(p.caption)}</span><span class="kind ${esc(p.group)}">${esc(GROUP_NAMES[p.group] || "")}</span></figcaption>
+      </figure>`).join("");
+  }
+  $("whyChips").addEventListener("click", e => { const b = e.target.closest("[data-g]"); if (b) { whyFilter = b.dataset.g; renderWhy(); } });
 
   // ---------- Trips drawer ----------
   function renderDrawer() {
