@@ -428,25 +428,38 @@ function makeGallery(sectionId, key, { groups = false, noun = "photos" } = {}) {
         ${groups ? `<select data-group="${i}" aria-label="Group">${GROUPS.map(([v, l]) => `<option value="${v}" ${p.group === v ? "selected" : ""}>${l}</option>`).join("")}</select>` : ""}
         <div class="row-actions">
           <button class="x" data-up="${i}" type="button" ${i ? "" : "disabled"} aria-label="Move earlier">&larr;</button>
+          <button class="x" data-rep="${i}" type="button">Replace</button>
           <button class="x" data-rm="${i}" type="button">Remove</button>
         </div>
       </div>`).join("") || `<p class="hint">No photos yet.</p>`;
   };
+  const dirty = () => { msg.textContent = "Unsaved changes. Press Save to put them on the site."; };
+  const replaceInput = Object.assign(document.createElement("input"), { type: "file", accept: "image/*", hidden: true });
+  sec.appendChild(replaceInput);
+  let replacing = -1;
+  replaceInput.addEventListener("change", async e => {
+    const file = e.target.files[0]; e.target.value = "";
+    if (!file || replacing < 0) return;
+    items[replacing] = { ...items[replacing], dataUrl: await compress(await readDataUrl(file), 1000, .82) };
+    replacing = -1; render(); dirty();
+  });
   grid.addEventListener("input", e => {
     const c = e.target.closest("[data-cap]"), g = e.target.closest("[data-group]");
     if (c) items[+c.dataset.cap].caption = c.value;
     if (g) items[+g.dataset.group].group = g.value;
+    dirty();
   });
   grid.addEventListener("change", e => { const g = e.target.closest("[data-group]"); if (g) items[+g.dataset.group].group = g.value; });
   grid.addEventListener("click", e => {
-    const up = e.target.closest("[data-up]"), rm = e.target.closest("[data-rm]");
-    if (up) { const i = +up.dataset.up; [items[i - 1], items[i]] = [items[i], items[i - 1]]; render(); }
-    if (rm) { items.splice(+rm.dataset.rm, 1); render(); }
+    const up = e.target.closest("[data-up]"), rm = e.target.closest("[data-rm]"), rp = e.target.closest("[data-rep]");
+    if (up) { const i = +up.dataset.up; [items[i - 1], items[i]] = [items[i], items[i - 1]]; render(); dirty(); }
+    if (rm) { items.splice(+rm.dataset.rm, 1); render(); dirty(); }
+    if (rp) { replacing = +rp.dataset.rep; replaceInput.click(); }
   });
   sec.querySelector("[data-add]").addEventListener("click", () => input.click());
   input.addEventListener("change", async e => {
     for (const file of e.target.files) items.push({ src: "", caption: "", ...(groups ? { group: "family" } : {}), dataUrl: await compress(await readDataUrl(file), 1000, .82) });
-    e.target.value = ""; render();
+    e.target.value = ""; render(); dirty();
   });
   saveBtn.addEventListener("click", async () => {
     saveBtn.disabled = true;
@@ -499,4 +512,4 @@ $("saveKey").addEventListener("click", () => {
 
 // ---------- Boot ----------
 $("ghRepo").value = repo; $("repoName").textContent = repo.split("/")[1] || repo;
-if (token) connect(); else $("connect").hidden = false;
+if (token) { $("loading").hidden = false; connect().finally(() => { $("loading").hidden = true; }); } else $("connect").hidden = false;
